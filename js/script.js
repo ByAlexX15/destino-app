@@ -1,16 +1,19 @@
 const mensajes = {
-    Aries: [
-        "Hoy es un día perfecto para tomar la iniciativa.",
-        "Una oportunidad aparece cuando menos lo esperas."
-    ],
-    Tauro: [
-        "La paciencia será tu mayor aliada.",
-        "Algo que parecía estancado comienza a moverse."
-    ],
-    Géminis: [
-        "Una conversación cambiará tu rumbo.",
-        "Escucha con atención, no todo se dice con palabras."
-    ],
+      Aries: [
+    	"Hoy es un buen día para tomar la iniciativa.",
+    	"Confía en tu energía interior.",
+    	"El universo te empuja a actuar."
+  	],
+  Tauro: [
+    "La paciencia será tu mayor aliada.",
+    "Cuida lo que valoras.",
+    "La estabilidad trae recompensas."
+  ],
+  Géminis: [
+    "Una conversación traerá claridad.",
+    "Tu curiosidad abrirá nuevas puertas.",
+    "El cambio es tu aliado."
+  ],
     Cáncer: [
         "Confía en tu intuición, hoy está muy fuerte.",
         "Un recuerdo trae una enseñanza importante."
@@ -64,6 +67,10 @@ function obtenerSigno(dia, mes) {
     if ((mes === 2 && dia >= 19) || (mes === 3 && dia <= 20)) return "Piscis";
 }
 
+const energiaDelDia = dia % 2 === 0
+  ? "La luna favorece la reflexión 🌙"
+  : "El sol potencia tu acción ☀️";
+
 function leerDestino() {
     const fecha = document.getElementById("fecha").value;
 
@@ -82,6 +89,17 @@ function leerDestino() {
     const mensajeAleatorio =
         listaMensajes[Math.floor(Math.random() * listaMensajes.length)];
 
-    document.getElementById("resultado").innerText =
-        "✨ Signo: " + signo + "\n🔮 Destino: " + mensajeAleatorio;
+    const resultado = document.getElementById("resultado");
+
+    const energiaDelDia = dia % 2 === 0
+        ? "La luna favorece la reflexión 🌙"
+        : "El sol potencia tu acción ☀️";
+
+    resultado.innerText =
+        "✨ Signo: " + signo +
+        "\n🔮 Destino: " + mensajeAleatorio +
+        "\n🌌 Energía: " + energiaDelDia;
+
+    resultado.classList.remove("oculto");
+
 }

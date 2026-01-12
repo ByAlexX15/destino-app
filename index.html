@@ -2,22 +2,32 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>🔮 Tu Destino</title>
+    <title>Destino Místico</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-    <h1>🔮 Descubre tu destino</h1>
+    <!-- CONTENEDOR PRINCIPAL -->
+    <div class="container">
+        <div class="card">
 
-    <label for="fecha">Fecha de nacimiento:</label><br>
-    <input type="date" id="fecha">
+            <h1>🔮 Destino Místico</h1>
+            <p>Descubre lo que el universo tiene para ti</p>
 
-    <br><br>
+            <!-- INPUT DE FECHA -->
+            <label for="fecha">Fecha de nacimiento</label>
+            <input type="date" id="fecha">
 
-    <button onclick="leerDestino()">Leer mi destino</button>
+            <!-- BOTÓN -->
+            <button onclick="leerDestino()">Leer mi destino</button>
 
-    <p id="resultado"></p>
+            <!-- RESULTADO (ESTO ES LO IMPORTANTE) -->
+            <div id="resultado" class="resultado oculto"></div>
 
+        </div>
+    </div>
+
+    <!-- JS SIEMPRE AL FINAL -->
     <script src="js/script.js"></script>
 </body>
 </html>
