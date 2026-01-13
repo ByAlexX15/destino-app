@@ -66,6 +66,86 @@ const mensajes = {
 };
 
 // ======================
+// Colores por signo
+// ======================
+
+
+const coloresSigno = {
+  Aries: {
+    light: "rgba(239, 68, 68, 0.25)",
+    soft: "rgba(239, 68, 68, 0.15)",
+    medium: "rgba(239, 68, 68, 0.3)",
+    strong: "rgba(239, 68, 68, 0.5)"
+  },
+  Tauro: {
+    light: "rgba(34, 197, 94, 0.25)",
+    soft: "rgba(34, 197, 94, 0.15)",
+    medium: "rgba(34, 197, 94, 0.3)",
+    strong: "rgba(34, 197, 94, 0.5)"
+  },
+  Géminis: {
+    light: "rgba(59, 130, 246, 0.25)",
+    soft: "rgba(59, 130, 246, 0.15)",
+    medium: "rgba(59, 130, 246, 0.3)",
+    strong: "rgba(59, 130, 246, 0.5)"
+  },
+  Cáncer: {
+    light: "rgba(148, 163, 184, 0.25)",
+    soft: "rgba(148, 163, 184, 0.15)",
+    medium: "rgba(148, 163, 184, 0.3)",
+    strong: "rgba(148, 163, 184, 0.5)"
+  },
+  Leo: {
+    light: "rgba(250, 204, 21, 0.3)",
+    soft: "rgba(250, 204, 21, 0.2)",
+    medium: "rgba(250, 204, 21, 0.4)",
+    strong: "rgba(250, 204, 21, 0.6)"
+  },
+  Virgo: {
+    light: "rgba(16, 185, 129, 0.25)",
+    soft: "rgba(16, 185, 129, 0.15)",
+    medium: "rgba(16, 185, 129, 0.3)",
+    strong: "rgba(16, 185, 129, 0.5)"
+  },
+  Libra: {
+    light: "rgba(236, 72, 153, 0.25)",
+    soft: "rgba(236, 72, 153, 0.15)",
+    medium: "rgba(236, 72, 153, 0.3)",
+    strong: "rgba(236, 72, 153, 0.5)"
+  },
+  Escorpio: {
+    light: "rgba(147, 51, 234, 0.3)",
+    soft: "rgba(147, 51, 234, 0.2)",
+    medium: "rgba(147, 51, 234, 0.4)",
+    strong: "rgba(147, 51, 234, 0.6)"
+  },
+  Sagitario: {
+    light: "rgba(249, 115, 22, 0.25)",
+    soft: "rgba(249, 115, 22, 0.15)",
+    medium: "rgba(249, 115, 22, 0.3)",
+    strong: "rgba(249, 115, 22, 0.5)"
+  },
+  Capricornio: {
+    light: "rgba(100, 116, 139, 0.25)",
+    soft: "rgba(100, 116, 139, 0.15)",
+    medium: "rgba(100, 116, 139, 0.3)",
+    strong: "rgba(100, 116, 139, 0.5)"
+  },
+  Acuario: {
+    light: "rgba(14, 165, 233, 0.25)",
+    soft: "rgba(14, 165, 233, 0.15)",
+    medium: "rgba(14, 165, 233, 0.3)",
+    strong: "rgba(14, 165, 233, 0.5)"
+  },
+  Piscis: {
+    light: "rgba(99, 102, 241, 0.25)",
+    soft: "rgba(99, 102, 241, 0.15)",
+    medium: "rgba(99, 102, 241, 0.3)",
+    strong: "rgba(99, 102, 241, 0.5)"
+  }
+};
+
+// ======================
 // FUNCIONES AUXILIARES
 // ======================
 
@@ -102,6 +182,15 @@ function leerDestino() {
 
   const signo = obtenerSigno(dia, mes);
 
+  const color = coloresSigno[signo];
+  
+  const resultado = document.getElementById("resultado");
+
+  resultado.style.setProperty("--glow-color-light", color.light);
+  resultado.style.setProperty("--glow-color-soft", color.soft);
+  resultado.style.setProperty("--glow-color-medium", color.medium);
+  resultado.style.setProperty("--glow-color-strong", color.strong);
+
   const listaMensajes = mensajes[signo];
   const mensajeAleatorio =
     listaMensajes[Math.floor(Math.random() * listaMensajes.length)];
@@ -110,12 +199,27 @@ function leerDestino() {
     ? "La luna favorece la reflexión 🌙"
     : "El sol potencia tu acción ☀️";
 
-  const resultado = document.getElementById("resultado");
 
-  resultado.innerText =
+
+  // 👉 TEXTO FINAL (UNA SOLA VEZ)
+  const textoFinal =
     "✨ Signo: " + signo +
     "\n🔮 Destino: " + mensajeAleatorio +
     "\n🌌 Energía: " + energiaDelDia;
 
-  resultado.classList.remove("oculto");
+  // 👉 RESET DE ANIMACIÓN
+  resultado.classList.remove("visible");
+
+  setTimeout(() => {
+    resultado.innerText = textoFinal;
+    resultado.classList.add("visible");
+  }, 325);
+
+  // 👉 BLOQUEO DE BOTÓN
+  const boton = document.getElementById("btnDestino");
+  boton.disabled = true;
+
+  setTimeout(() => {
+    boton.disabled = false;
+  }, 600);
 }

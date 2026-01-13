@@ -66,14 +66,62 @@ button:hover {
   transform: scale(1.03);
 }
 
-.resultado {
+#resultado {
   margin-top: 20px;
-  padding: 15px;
-  background: #f3f3f3;
-  border-radius: 10px;
-  font-style: italic;
+  padding: 18px 20px;
+  border-radius: 12px;
+
+  background: #1f2933;
+  color: #f1f5f9;
+
+  font-size: 16px;
+  line-height: 1.5;
+  white-space: pre-line;
+
+  opacity: 0;
+  transform: translateY(12px);
+
+  /* 👇 ESTADO SIN GLOW */
+  box-shadow: none;
+
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.8s ease;
+
+
+  --glow-color-light: rgba(168, 85, 247, 0.25);
+  --glow-color-soft: rgba(168, 85, 247, 0.15);
+  --glow-color-medium: rgba(168, 85, 247, 0.3);
+  --glow-color-strong: rgba(168, 85, 247, 0.5);
+}
+
+#resultado.visible {
+  opacity: 1;
+  transform: translateY(0);
+
+  animation: respirarGlow 2.5s ease-in-out infinite;
+}
+
+@keyframes respirarGlow {
+  0% {
+    box-shadow:
+      0 0 12px var(--glow-color-light),
+      0 0 24px var(--glow-color-soft);
+  }
+  50% {
+    box-shadow:
+      0 0 22px var(--glow-color-strong),
+      0 0 44px var(--glow-color-medium);
+  }
+  100% {
+    box-shadow:
+      0 0 12px var(--glow-color-light),
+      0 0 24px var(--glow-color-soft);
+  }
 }
 
 .oculto {
-  display: none;
+  opacity: 0;
+  pointer-events: none;
 }
