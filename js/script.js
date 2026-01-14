@@ -165,9 +165,78 @@ function obtenerSigno(dia, mes) {
 }
 
 // ======================
+// FECHA DE HOY
+// ======================
+function obtenerFechaHoy() {
+  const hoy = new Date();
+  const year = hoy.getFullYear();
+  const month = String(hoy.getMonth() + 1).padStart(2, "0");
+  const day = String(hoy.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+// ======================
+// APLICAR GLOW SEGÚN SIGNO
+// ======================
+function aplicarGlowPorSigno(signo) {
+  const color = coloresSigno[signo];
+  const resultado = document.getElementById("resultado");
+
+  resultado.style.setProperty("--glow-color-light", color.light);
+  resultado.style.setProperty("--glow-color-soft", color.soft);
+  resultado.style.setProperty("--glow-color-medium", color.medium);
+  resultado.style.setProperty("--glow-color-strong", color.strong);
+}
+
+function aplicarAnimacionPorSigno(signo) {
+  const resultado = document.getElementById("resultado");
+
+  // limpiar animaciones anteriores
+  resultado.classList.remove(
+    "anim-fuego",
+    "anim-tierra",
+    "anim-aire",
+    "anim-agua"
+  );
+
+  const fuego = ["Aries", "Leo", "Sagitario"];
+  const tierra = ["Tauro", "Virgo", "Capricornio"];
+  const aire = ["Géminis", "Libra", "Acuario"];
+  const agua = ["Cáncer", "Escorpio", "Piscis"];
+
+  if (fuego.includes(signo)) resultado.classList.add("anim-fuego");
+  else if (tierra.includes(signo)) resultado.classList.add("anim-tierra");
+  else if (aire.includes(signo)) resultado.classList.add("anim-aire");
+  else if (agua.includes(signo)) resultado.classList.add("anim-agua");
+  console.log("Animación aplicada para:", signo);
+}
+
+// ======================
+// MOSTRAR RESULTADO
+// ======================
+function mostrarResultado(signo, mensaje, energia) {
+  const resultado = document.getElementById("resultado");
+
+  const textoFinal =
+    "✨ Signo: " + signo +
+    "\n🔮 Destino: " + mensaje +
+    "\n🌌 Energía: " + energia;
+
+  // reset animación
+  resultado.classList.remove("visible");
+
+  setTimeout(() => {
+    resultado.innerText = textoFinal;
+    resultado.classList.add("visible");
+    aplicarAnimacionPorSigno(signo);
+  }, 325);
+}
+
+
+// ======================
 // FUNCIÓN PRINCIPAL
 // ======================
-
 function leerDestino() {
   const fecha = document.getElementById("fecha").value;
 
@@ -176,46 +245,63 @@ function leerDestino() {
     return;
   }
 
+  const fechaHoy = obtenerFechaHoy();
+  const lecturaGuardada = localStorage.getItem("oraculoDiario");
+
+  // ======================
+  // ORÁCULO DIARIO (CACHE)
+  // ======================
+  if (lecturaGuardada) {
+    const datos = JSON.parse(lecturaGuardada);
+
+    if (datos.fecha === fechaHoy && datos.fechaNacimiento === fecha) {
+      aplicarGlowPorSigno(datos.signo);
+      mostrarResultado(datos.signo, datos.mensaje, datos.energia);
+      return;
+    }
+  }
+
+  // ======================
+  // NUEVA LECTURA
+  // ======================
   const partes = fecha.split("-");
   const dia = Number(partes[2]);
   const mes = Number(partes[1]);
 
   const signo = obtenerSigno(dia, mes);
 
-  const color = coloresSigno[signo];
-  
-  const resultado = document.getElementById("resultado");
-
-  resultado.style.setProperty("--glow-color-light", color.light);
-  resultado.style.setProperty("--glow-color-soft", color.soft);
-  resultado.style.setProperty("--glow-color-medium", color.medium);
-  resultado.style.setProperty("--glow-color-strong", color.strong);
-
   const listaMensajes = mensajes[signo];
   const mensajeAleatorio =
     listaMensajes[Math.floor(Math.random() * listaMensajes.length)];
 
-  const energiaDelDia = dia % 2 === 0
-    ? "La luna favorece la reflexión 🌙"
-    : "El sol potencia tu acción ☀️";
+  const energiaDelDia =
+    dia % 2 === 0
+      ? "La luna favorece la reflexión 🌙"
+      : "El sol potencia tu acción ☀️";
 
+  // aplicar glow
+  aplicarGlowPorSigno(signo);
+	
+  aplicarAnimacionPorSigno(signo);
+  // mostrar resultado
+  mostrarResultado(signo, mensajeAleatorio, energiaDelDia);
 
+  // ======================
+  // GUARDAR EN LOCALSTORAGE
+  // ======================
+  const lecturaHoy = {
+    fecha: fechaHoy,
+    fechaNacimiento: fecha,
+    signo: signo,
+    mensaje: mensajeAleatorio,
+    energia: energiaDelDia,
+  };
 
-  // 👉 TEXTO FINAL (UNA SOLA VEZ)
-  const textoFinal =
-    "✨ Signo: " + signo +
-    "\n🔮 Destino: " + mensajeAleatorio +
-    "\n🌌 Energía: " + energiaDelDia;
+  localStorage.setItem("oraculoDiario", JSON.stringify(lecturaHoy));
 
-  // 👉 RESET DE ANIMACIÓN
-  resultado.classList.remove("visible");
-
-  setTimeout(() => {
-    resultado.innerText = textoFinal;
-    resultado.classList.add("visible");
-  }, 325);
-
-  // 👉 BLOQUEO DE BOTÓN
+  // ======================
+  // BLOQUEO DE BOTÓN
+  // ======================
   const boton = document.getElementById("btnDestino");
   boton.disabled = true;
 
