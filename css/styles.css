@@ -1,169 +1,131 @@
-* {
-  box-sizing: border-box;
-  font-family: 'Segoe UI', sans-serif;
+/* =========================
+   VARIABLES Y CONFIGURACIÓN
+========================= */
+@property --scan-pos {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
 }
+
+/* =========================
+   RESET Y BASE
+========================= */
+* { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
 body {
-  margin: 0;
-  height: 100vh;
-  background: linear-gradient(135deg, #2b1055, #7597de);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
 }
 
-.container {
-  width: 100%;
-  max-width: 400px;
-  padding: 20px;
-}
+.container { width: 100%; max-width: 400px; padding: 20px; }
 
 .card {
-  background: white;
-  border-radius: 15px;
-  padding: 25px;
-  text-align: center;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    color: #333;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    margin-bottom: 20px;
 }
 
-.card h1 {
-  margin-bottom: 5px;
-}
-
-.card p {
-  color: #555;
-  margin-bottom: 20px;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-input {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  margin-bottom: 15px;
+input, button {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
 }
 
 button {
+    background: #6a11cb;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: 0.3s;
+}
+
+button:hover { background: #2575fc; }
+
+/* =========================
+   TARJETA TAROT Y GLOW
+========================= */
+.tarot-card {
+  position: relative;
   width: 100%;
-  padding: 12px;
-  background: #6a11cb;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: transform 0.2s, background 0.2s;
+  min-height: 240px;
+  padding: 30px;
+  background: radial-gradient(circle at top, #1b1b2f, #0d0d1a);
+  border-radius: 18px;
+  border: 1px solid rgba(180,160,255,0.35);
+  color: #eae6ff;
+  overflow: hidden;
+  transition: transform 0.5s ease;
 }
 
-button:hover {
-  background: #2575fc;
-  transform: scale(1.03);
-}
-
-#resultado {
-  margin-top: 20px;
-  padding: 18px 20px;
-  border-radius: 12px;
-
-  background: #1f2933;
-  color: #f1f5f9;
-
-  font-size: 16px;
-  line-height: 1.5;
-  white-space: pre-line;
-
-  opacity: 0;
-  transform: translateY(12px);
-
-  /* 👇 ESTADO SIN GLOW */
-  box-shadow: none;
-
-  transition:
-    opacity 0.3s ease,
-    transform 0.3s ease,
-    box-shadow 0.8s ease;
-
-
-  --glow-color-light: rgba(168, 85, 247, 0.25);
-  --glow-color-soft: rgba(168, 85, 247, 0.15);
-  --glow-color-medium: rgba(168, 85, 247, 0.3);
-  --glow-color-strong: rgba(168, 85, 247, 0.5);
-}
-
-#resultado.visible {
-  opacity: 1;
-  transform: translateY(0);
-
-  animation: respirarGlow 2.5s ease-in-out infinite;
+/* El efecto de "Respirar" con los colores del signo */
+.tarot-card.glow-activo {
+  animation: respirarGlow 3.2s ease-in-out infinite;
 }
 
 @keyframes respirarGlow {
-  0% {
-    box-shadow:
-      0 0 12px var(--glow-color-light),
-      0 0 24px var(--glow-color-soft);
+  0%, 100% {
+    box-shadow: 0 0 18px var(--glow-color-light), 0 0 40px var(--glow-color-soft);
   }
   50% {
-    box-shadow:
-      0 0 22px var(--glow-color-strong),
-      0 0 44px var(--glow-color-medium);
-  }
-  100% {
-    box-shadow:
-      0 0 12px var(--glow-color-light),
-      0 0 24px var(--glow-color-soft);
+    box-shadow: 0 0 35px var(--glow-color-strong), 0 0 70px var(--glow-color-medium);
   }
 }
 
-.oculto {
+/* =========================
+   ESCÁNER Y REVELADO (Sincronizados)
+========================= */
+.tarot-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, transparent, rgba(180,140,255,0.95), transparent);
+  box-shadow: 0 0 18px rgba(200,160,255,0.9);
+  z-index: 10;
   opacity: 0;
-  pointer-events: none;
+  top: calc(var(--scan-pos) * 1%);
 }
 
-@keyframes fuego {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05) translateY(-4px); }
-  100% { transform: scale(1); }
+.tarot-card.scanner-activo::before {
+  opacity: 1;
+  animation: syncMove 3.5s linear forwards;
 }
 
-.anim-fuego {
-  animation: fuego 0.45s ease-out;
+#textoDestino {
+  position: relative;
+  z-index: 1;
+  white-space: pre-wrap;
+  /* El texto se descubre según la posición del rayo */
+  clip-path: inset(0 0 calc(100% - (var(--scan-pos) * 1%)) 0);
 }
 
-/* TIERRA 🌱 */
-@keyframes tierra {
-  0% { transform: scale(0.92); }
-  100% { transform: scale(1); }
+.tarot-card.revelar-texto #textoDestino {
+  animation: syncMove 3.5s linear forwards;
 }
 
-.anim-tierra {
-  animation: tierra 0.4s ease-in;
+@keyframes syncMove {
+  from { --scan-pos: 0; }
+  to { --scan-pos: 100; }
 }
 
-/* AIRE 🌬️ */
-@keyframes aire {
-  0% { transform: translateY(12px); }
-  100% { transform: translateY(0); }
-}
-
-.anim-aire {
-  animation: aire 0.45s ease-out;
-}
-
-/* AGUA 🌊 */
-@keyframes agua {
-  0% { transform: rotate(0deg); }
-  25% { transform: rotate(1.2deg); }
-  75% { transform: rotate(-1.2deg); }
-  100% { transform: rotate(0deg); }
-}
-
-.anim-agua {
-  animation: agua 0.6s ease-in-out;
-}
+/* =========================
+   ANIMACIONES POR ELEMENTO
+========================= */
+.anim-fuego { transform: scale(1.05) translateY(-5px); border-color: rgba(239, 68, 68, 0.5); }
+.anim-tierra { transform: scale(0.98); border-color: rgba(34, 197, 94, 0.5); }
+.anim-aire { transform: translateY(-10px); border-color: rgba(59, 130, 246, 0.5); }
+.anim-agua { transform: rotate(1deg); border-color: rgba(147, 51, 234, 0.5); }
