@@ -54,6 +54,14 @@ button {
 
 button:hover { background: #2575fc; }
 
+.mensaje-destino {
+  position: relative;
+  z-index: 1;
+  white-space: pre-line;
+  line-height: 1.5;
+  font-size: 1.1em;
+}
+
 /* =========================
    TARJETA TAROT Y GLOW
 ========================= */
@@ -129,3 +137,190 @@ button:hover { background: #2575fc; }
 .anim-tierra { transform: scale(0.98); border-color: rgba(34, 197, 94, 0.5); }
 .anim-aire { transform: translateY(-10px); border-color: rgba(59, 130, 246, 0.5); }
 .anim-agua { transform: rotate(1deg); border-color: rgba(147, 51, 234, 0.5); }
+
+
+.anim-fuego::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,120,80,0.4), transparent 45%),
+    radial-gradient(circle at 70% 60%, rgba(255,80,50,0.35), transparent 50%);
+  animation: fuegoPulse 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes fuegoPulse {
+  0%,100% { opacity: 0.35; }
+  50% { opacity: 0.5; }
+}
+
+.anim-tierra::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 80%, rgba(80,200,120,0.35), transparent 55%),
+    radial-gradient(circle at 30% 40%, rgba(60,160,100,0.25), transparent 50%);
+  animation: tierraPulse 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes tierraPulse {
+  0%,100% { opacity: 0.25; }
+  50% { opacity: 0.6; }
+}
+
+.anim-aire::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 40% 30%, rgba(120,180,255,0.35), transparent 55%),
+    radial-gradient(circle at 65% 60%, rgba(160,210,255,0.25), transparent 60%);
+  animation: aireFlotar 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes aireFlotar {
+  0% { opacity: 0.2; transform: translateY(0); }
+  50% { opacity: 0.6; transform: translateY(-6px); }
+  100% { opacity: 0.2; transform: translateY(0); }
+}
+
+.anim-agua::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(120,100,255,0.35), transparent 55%),
+    radial-gradient(circle at 60% 40%, rgba(160,140,255,0.25), transparent 60%);
+  animation: aguaOndas 4.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes aguaOndas {
+  0%,100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+/* =========================
+   FONDO DE ESTRELLAS
+========================= */
+
+/* Capa 1: estrellas pequeñas */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(2px 2px at 10% 20%, #ffffff, transparent),
+    radial-gradient(3px 3px at 25% 70%, #ffffff, transparent),
+    radial-gradient(2px 2px at 40% 40%, #ffffff, transparent),
+    radial-gradient(3px 3px at 55% 15%, #ffffff, transparent),
+    radial-gradient(2px 2px at 70% 80%, #ffffff, transparent),
+    radial-gradient(3px 3px at 85% 35%, #ffffff, transparent),
+    radial-gradient(2px 2px at 95% 60%, #ffffff, transparent);
+  background-repeat: repeat;
+  background-size: 400px 400px;
+  opacity: 0.9;
+  z-index: -4;
+  animation: estrellasLentas 180s linear infinite;
+}
+
+.stars {
+  position: fixed;
+  inset: 0;
+  z-index: -2; /* entre el fondo y el contenido */
+  pointer-events: none;
+}
+.star {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+@keyframes starGlow {
+  0%, 100% {
+    opacity: 0.25;
+    box-shadow:
+      0 0 8px rgba(255,255,255,0.5),
+      0 0 18px rgba(180,140,255,0.5),
+      0 0 30px rgba(140,90,255,0.35);
+  }
+  50% {
+    opacity: 1;
+    box-shadow:
+      0 0 16px rgba(255,255,255,1),
+      0 0 36px rgba(180,140,255,0.95),
+      0 0 65px rgba(140,90,255,0.85);
+  }
+}
+
+.star.glow {
+  animation: starGlow 4.5s ease-in-out infinite;
+  filter: blur(0.3px)
+}
+
+.star.glow:nth-child(7n) {
+  transform: scale(2);
+}
+.star.glow:nth-child(11n) {
+  transform: scale(2.6);
+}
+.star.glow:nth-child(3n) {
+  animation-duration: 3.5s;
+}
+.star.glow:nth-child(4n) {
+  animation-duration: 5s;
+  transform: scale(1.3);
+}
+.star.glow:nth-child(5n) {
+  animation-delay: 2.5s;
+  transform: scale(1.6);
+}
+
+/* Capa 2: estrellas que parpadean */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(6px 6px at 20% 30%, rgba(190,170,255,1), transparent),
+    radial-gradient(5px 5px at 60% 50%, rgba(180,220,255,1), transparent),
+    radial-gradient(7px 7px at 80% 75%, rgba(255,220,180,1), transparent),
+    radial-gradient(5px 5px at 35% 65%, rgba(220,180,255,1), transparent);
+  filter: blur(1.8px);
+  opacity: 1;
+  z-index: -3;
+  animation: estrellasPulse 90000s ease-in-out infinite alternate;
+}
+
+@keyframes estrellasLentas {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-120px); }
+}
+
+@keyframes estrellasPulse {
+  from { transform: scale(0.95); opacity: 0.7; }
+  to   { transform: scale(1.1); opacity: 1; }
+}
+
+.titulo-signo {
+  font-size: 1.4em;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  opacity: 0.9;
+}
+
+.titulo-destino {
+  font-size: 0.9em;
+  opacity: 0.7;
+  margin-bottom: 12px;
+}
+

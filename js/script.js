@@ -55,6 +55,15 @@ function aplicarAnimacionPorSigno(signo) {
   else card.classList.add("anim-agua");
 }
 
+function limpiarAnimaciones(card) {
+  card.classList.remove(
+    "anim-fuego",
+    "anim-tierra",
+    "anim-aire",
+    "anim-agua"
+  );
+}
+
 function leerDestino() {
   const fecha = document.getElementById("fecha").value;
   if (!fecha) return alert("Selecciona una fecha 📅");
@@ -67,8 +76,10 @@ function leerDestino() {
   const texto = document.getElementById("textoDestino");
 
   // RESET
-  card.className = "tarot-card"; 
+  card.className = "tarot-card";
+  limpiarAnimaciones(card); 
   void card.offsetWidth; 
+  
 
   // COLORES GLOW
   const c = coloresSigno[signo];
@@ -78,9 +89,35 @@ function leerDestino() {
   card.style.setProperty("--glow-color-strong", c.strong);
 
   // CONTENIDO
-  texto.innerText = `✨ Signo: ${signo}\n\n🔮 Destino:\n${mensaje}`;
+texto.innerHTML = `
+<div class="titulo-signo">✨ ${signo}</div>
+
+<div class="titulo-destino">🔮 Mensaje Akáshico</div>
+${mensaje}
+`;
 
   // ACTIVAR TODO
-  card.classList.add("scanner-activo", "revelar-texto", "glow-activo");
-  aplicarAnimacionPorSigno(signo);
+  card.classList.add("glow-activo");
+
+  setTimeout(() => {
+    card.classList.add("scanner-activo", "revelar-texto");
+    aplicarAnimacionPorSigno(signo);
+  }, 500);
+}
+
+const starsContainer = document.querySelector('.stars');
+
+for (let i = 0; i < 80; i++) {
+  const star = document.createElement('span');
+  star.classList.add('star');
+
+  if (Math.random() > 0.6) {
+    star.classList.add('glow');
+  }
+
+  star.style.top = Math.random() * 100 + '%';
+  star.style.left = Math.random() * 100 + '%';
+  star.style.animationDelay = Math.random() * 5 + 's';
+
+  starsContainer.appendChild(star);
 }
